@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Подтверждение email</title>
+    <style>
+        .card{
+            font-family: "Helvetica Neue";
+            text-align: center;
+            margin: auto;
+            width 40%;
+        }
+        .button{
+            padding: 7px;
+            margin-bottom: 10px;
+            background: #993CF3;
+            color: #fff;
+            border-radius: 7px;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="card">
+        <div class="card-body">
+            <p class="card-text">
+                <strong>{{ text_detail }}</strong>
+            </p>
+            <p class="card-center">{{ email }}</p>
+            {{ code }}
+            <form method="post">
+                <a class="link" href="{{ domain }}{% url 'activate' email code %}">
+                    <button class="button" type="button">
+                        Подтвердить email
+                    </button>
+                </a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
