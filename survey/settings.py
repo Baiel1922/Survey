@@ -20,8 +20,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     "rest_framework",
+    'rest_framework_swagger',
     "rest_framework_simplejwt.token_blacklist",
     'account',
+    'main',
 ]
 
 MIDDLEWARE = [
@@ -58,8 +60,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'survey',
-        'USER': 'daniel',
-        'PASSWORD': '1',
+        'USER': 'baiel',
+        'PASSWORD': '19172211',
         "HOST": "localhost",
         "PORT": 5432
     }
@@ -111,6 +113,7 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_PERMISSION_CLASSES": (
         "account.permissions.IsActive",
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly",
     ),
 }
 
