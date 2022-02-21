@@ -29,11 +29,6 @@ class SumbitionAdmin(admin.ModelAdmin):
     list_display_links = ("id", "participant_email")
     search_fields = ("participant_email",)
 
-class QuestionAdmin(admin.ModelAdmin):
-    list_display = ("id", "survey")
-    list_display_links = ("id", "survey")
-    search_fields = ["survey"]
-    list_filter = ("survey",)
 
 class ChoiceAdmin(admin.ModelAdmin):
     list_display = ("id", "question")
@@ -49,6 +44,10 @@ class ChoiceInline(admin.TabularInline):
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
     inlines = [ChoiceInline, ]
+    list_display = ("id", "survey")
+    list_display_links = ("id", "survey")
+    search_fields = ["survey"]
+    list_filter = ("survey",)
 
 
 admin.site.register(Category, CategoryAdmin)

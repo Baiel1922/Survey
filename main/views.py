@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.shortcuts import render
 from rest_framework import viewsets, generics
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from .serializers import *
 from .models import *
 # Create your views here.
@@ -30,3 +33,12 @@ class SumbitionView(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
     queryset = Sumbition.objects.all()
     serializer_class = SumbitionSerializer
+
+class ReviewCreateView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        review = ReviewCreateSerializer(data=request.data)
+        if review.is_valid():
+            review.save()
+        return Response(review.data)
