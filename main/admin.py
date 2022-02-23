@@ -49,8 +49,14 @@ class QuestionAdmin(admin.ModelAdmin):
     search_fields = ["survey"]
     list_filter = ("survey",)
 
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ("id", "name", "email", "survey")
+    list_display_links = ("id", "name", "email", "survey")
+    search_fields = ["name"]
+    list_filter = ("survey",)
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Choice, ChoiceAdmin)
 admin.site.register(Survey, SurveyAdmin)
 admin.site.register(Sumbition, SumbitionAdmin)
+admin.site.register(Review, ReviewAdmin)

@@ -40,6 +40,7 @@ class RecursiveSerializer(serializers.ModelSerializer):
         return serializer.data
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
+    """Добавление комментария"""
     class Meta:
         model = Review
         fields = "__all__"

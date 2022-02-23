@@ -29,16 +29,11 @@ class ChoiceViewSet(viewsets.ModelViewSet):
     queryset = Choice.objects.all()
     serializer_class = ChoiceSerializer
 
-class SumbitionView(viewsets.ModelViewSet):
+class SumbitionViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
     queryset = Sumbition.objects.all()
     serializer_class = SumbitionSerializer
 
-class ReviewCreateView(APIView):
+class ReviewCreateView(generics.CreateAPIView):
     permission_classes = [AllowAny]
-
-    def post(self, request):
-        review = ReviewCreateSerializer(data=request.data)
-        if review.is_valid():
-            review.save()
-        return Response(review.data)
+    serializer_class = ReviewCreateSerializer

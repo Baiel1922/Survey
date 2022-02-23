@@ -6,10 +6,10 @@ router = DefaultRouter()
 router.register(r'surveys', SurveyViewSet)
 router.register(r'questions', QuestionViewSet)
 router.register(r'choices', ChoiceViewSet)
-router.register(r'sumbitions', SumbitionView)
+router.register(r'sumbitions', SumbitionViewSet)
 
 urlpatterns = [
     path('categories/', CategoryListView.as_view()),
     path('', include(router.urls)),
-    path('review/', ReviewCreateView.as_view()),
+    path('reviews/', ReviewCreateView.as_view()),
 ]

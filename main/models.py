@@ -19,7 +19,7 @@ class Survey(models.Model):
                                verbose_name='Author')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='surveys',
                                  verbose_name='Category')
-    image = models.ImageField(upload_to='images', blank=True, null=True, verbose_name='Image')
+    image = models.ImageField(upload_to='media', blank=True, null=True, verbose_name='Image')
     def __str__(self):
         return f"{self.title}"
 
