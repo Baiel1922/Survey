@@ -55,6 +55,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'survey.wsgi.application'
 
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -114,6 +116,7 @@ REST_FRAMEWORK = {
         "account.permissions.IsActive",
         "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly",
     ),
+    'DEFAULT_PAGINATION_CLASS': "rest_framework.pagination.LimitOffsetPagination",
 }
 
 SIMPLE_JWT = {
