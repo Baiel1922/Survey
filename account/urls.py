@@ -10,4 +10,5 @@ urlpatterns = [
     path("logout/", LogoutView.as_view()),
     path("forgot_password/<str:email>/", ForgotPasswordView.as_view()),
     path("complete_recovery/", CompleteRestPasswordView.as_view()),
+    path("users/", UserView.as_view()),
 ]

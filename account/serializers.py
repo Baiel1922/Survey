@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import *
 from .utils import send_activation_code
-
+from main.serializers import SurveySerializer
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(min_length=4, required=True, write_only=True)
@@ -76,3 +76,15 @@ class CreateNewPasswordSerialier(serializers.Serializer):
         user.set_password(password)
         user.save()
         return user
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["email", ]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["surveys"] = SurveySerializer(instance.surveys.all(), many=True,
+                                                         context=self.context).data
+
+        return representation

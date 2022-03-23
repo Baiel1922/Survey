@@ -1,3 +1,4 @@
+from rest_framework import generics
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.views import APIView
@@ -8,6 +9,8 @@ from .serializers import *
 from .models import User
 from .permissions import *
 from .utils import send_activation_code
+from .serializers import UserSerializer
+
 
 class RegistrationView(APIView):
     permission_classes = [AllowAny]
@@ -76,3 +79,8 @@ class CompleteRestPasswordView(APIView):
             return Response(
                 "Вы успешно поменяли пароль", status=200
             )
+
+class UserView(generics.ListAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
