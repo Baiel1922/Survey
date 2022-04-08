@@ -20,7 +20,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     "rest_framework",
-    "rest_framework_simplejwt.token_blacklist",
+    'rest_framework.authtoken',
+
+
     'account',
     'main',
 ]
@@ -59,8 +61,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'survey',
-        'USER': 'baiel',
-        'PASSWORD': '19172211',
+        'USER': 'daniel',
+        'PASSWORD': '1',
         "HOST": "localhost",
         "PORT": 5432
     }
@@ -107,15 +109,10 @@ EMAIL_HOST_USER = '---email----'
 EMAIL_HOST_PASSWORD = '---pass---.'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-    "DEFAULT_PERMISSION_CLASSES": (
-        "account.permissions.IsActive",
-        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly",
-    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication'
+    ]
 }
-
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),

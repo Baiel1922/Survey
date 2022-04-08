@@ -6,3 +6,5 @@ Pillow
 django-filter
 djangorestframework-simplejwt
 drf-yasg
+celery
+redis
