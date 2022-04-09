@@ -1,86 +1,66 @@
-from rest_framework import generics
-from django.shortcuts import get_object_or_404
-from rest_framework import status
-from rest_framework.views import APIView
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework_simplejwt.tokens import RefreshToken, OutstandingToken, BlacklistedToken
-from .serializers import *
-from .models import User
-from .permissions import *
-from .utils import send_activation_code
-from .serializers import UserSerializer
+from rest_framework.views import APIView
+
+from .serializers import (RegisterSerializer, ActivationSerializer, LoginSerializer, ChangePasswordSerializer,
+                          ForgetPasswordCompleteSerializer, ForgotPasswordSerializer)
 
 
-class RegistrationView(APIView):
-    permission_classes = [AllowAny]
 
+class RegisterView(APIView):
     def post(self, request):
         data = request.data
         serializer = RegisterSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response("Регистрация прошла успешно", status=status.HTTP_201_CREATED)
-
+            serializer.create()
+            message = f'Вы успешно зарегистрированы. ' \
+                      f'Вам отправлено письмо с активацией'
+            return Response(message, status=201)
 
 class ActivationView(APIView):
-    permission_classes = [AllowAny]
+    def post(self, request):
+        data = request.data
+        serializer = ActivationSerializer(data=data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.activate()
+            return Response('Ваш аккаунт успешно активирован')
 
-    def get(self, request, email, code):
-        user = User.objects.get(email=email, activation_code=code)
-        msg = (
-            "Пользователь не найден",
-            "Аккаунт активирован"
-        )
-        if not user:
-            return Response(msg[0], status=status.HTTP_400_BAD_REQUEST)
-        user.is_active = True
-        user.activation_code = ""
-        user.save()
-        return Response(msg[-1], status=status.HTTP_200_OK)
 
-    # permission_classes = (IsActive,)
 
+class LoginView(ObtainAuthToken):
+    serializer_class = LoginSerializer
 
 class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        try:
-            refresh_token = request.data["refresh_token"]
-            token = RefreshToken(token=refresh_token)
-            token.blacklist()
-            return Response(status=status.HTTP_205_RESET_CONTENT)
-        except Exception as e:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        user = request.user
+        Token.objects.filter(user=user).delete()
+        return Response('Вы успешно разлогинились')
 
 
-# /api/v1/forgot_password/?email=test@gmail.com
+class ChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        data = request.data
+        serializer = ChangePasswordSerializer(data=data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        serializer.set_new_pass()
+        return Response('Пароль успешно обновлён')
+
+
 class ForgotPasswordView(APIView):
-    def get(self, request, email):
-        user = get_object_or_404(User, email=email)
-        user.is_active = False
-        user.create_activation_code()
-        user.save()
-        send_activation_code(
-            email=user.email,
-            code=user.activation_code,
-            status="forgot_password"
-        )
-        return Response("Вам отправили письмо на почту", status=200)
-
-
-class CompleteRestPasswordView(APIView):
-    permission_classes = [AllowAny]
-
     def post(self, request):
-        serializer = CreateNewPasswordSerialier(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(
-                "Вы успешно поменяли пароль", status=200
-            )
+        data = request.data
+        serializer = ForgotPasswordSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.send_code()
+        return Response('Вам отправлено письмо для восстовления пароля')
 
-class UserView(generics.ListAPIView):
-    permission_classes = [AllowAny]
-    serializer_class = UserSerializer
-    queryset = User.objects.all()
+class ForgotPasswordCompleteView(APIView):
+    def post(self, request):
+        data = request.data
+        serializer = ForgetPasswordCompleteSerializer(data=data)

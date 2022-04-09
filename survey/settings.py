@@ -19,8 +19,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    "rest_framework",
-    "rest_framework_simplejwt.token_blacklist",
+    'rest_framework',
+
+    'rest_framework.authtoken',
     'account',
     'main',
     'drf_yasg',
@@ -62,8 +63,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'survey',
-        'USER': 'baiel',
-        'PASSWORD': '19172211',
+        'USER': 'daniel',
+        'PASSWORD': '1',
         "HOST": "localhost",
         "PORT": 5432
     }
@@ -110,21 +111,10 @@ EMAIL_HOST_USER = '---email----'
 EMAIL_HOST_PASSWORD = '---pass---.'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-    "DEFAULT_PERMISSION_CLASSES": (
-        "account.permissions.IsActive",
-        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly",
-    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication'
+    ],
     'DEFAULT_PAGINATION_CLASS': "rest_framework.pagination.LimitOffsetPagination",
-}
-
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': False,
 }
 
 STATIC_URL = '/static/'
