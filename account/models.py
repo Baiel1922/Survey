@@ -2,6 +2,7 @@ from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.core.mail import send_mail
 from django.db import models
 
+
 class UserManager(BaseUserManager):
     def _create(self, email, password, **extra_fields):
         if not email:
@@ -21,8 +22,6 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_active', True)
         extra_fields.setdefault('is_staff', True)
         return self._create(email, password, **extra_fields)
-
-
 
 
 class User(AbstractBaseUser):
