@@ -5,6 +5,7 @@ from django.db import models
 
 class UserManager(BaseUserManager):
     def _create(self, email, password, **extra_fields):
+
         if not email:
             raise ValueError('Email не может быть пустым')
         email = self.normalize_email(email)
@@ -56,5 +57,5 @@ class User(AbstractBaseUser):
     def send_activation_mail(email, code):
         message = f'Ваш код активации: {code}'
         send_mail('Активация аккаунта',
-                  message, 'test@gmail.com',
+                  message, 'matraimov.daniel@gmail.com',
                   [email])
