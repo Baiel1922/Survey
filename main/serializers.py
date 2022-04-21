@@ -122,4 +122,19 @@ class SurveySerializer(serializers.ModelSerializer):
         return representation
 
 
+class InfoUserSerializer(serializers.ModelSerializer):
+    author = ReadOnlyField(source='author.email')
 
+    class Meta:
+        model = InfoUser
+        fields = '__all__'
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        info, _ = InfoUser.objects.update_or_create(
+            author=request.user,
+            defaults={'name': validated_data.get('name'),
+                      'surname': validated_data.get('surname'),
+                      'image': validated_data.get('image')}
+        )
+        return info

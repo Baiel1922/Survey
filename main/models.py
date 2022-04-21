@@ -116,3 +116,15 @@ class Like(models.Model):
     def __str__(self):
         return f'{self.author} - {self.survey}'
 
+class InfoUser(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='info_user')
+    name = models.CharField(max_length=50)
+    surname = models.CharField(max_length=50)
+    image = models.ImageField(upload_to='media/user_image', blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.name}-{self.surname}'
+
+    class Meta:
+        verbose_name = 'Info_student'
+        verbose_name_plural = 'Info_studets'

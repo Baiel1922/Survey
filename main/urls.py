@@ -9,6 +9,7 @@ router.register(r'choices', ChoiceViewSet)
 router.register(r'sumbitions', SumbitionViewSet)
 router.register('ratings', AddRatingViewSet)
 router.register(r'likes', LikeView)
+router.register(r'info_users', InfoUserViewSet)
 
 urlpatterns = [
     path('categories/', CategoryListView.as_view()),

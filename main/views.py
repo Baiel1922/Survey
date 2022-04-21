@@ -56,6 +56,9 @@ class AddRatingViewSet(viewsets.ModelViewSet, PermissionMixin):
     queryset = Rating.objects.all()
     serializer_class = CreateRatingSerializer
 
+class InfoUserViewSet(viewsets.ModelViewSet, PermissionMixin):
+    queryset = InfoUser.objects.all()
+    serializer_class = InfoUserSerializer
 
 class LikeView(PermissionMixin ,viewsets.ModelViewSet):
     queryset = Like.objects.all()
