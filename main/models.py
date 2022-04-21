@@ -11,8 +11,10 @@ class Category(models.Model):
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
 
+
 class Survey(models.Model):
     title = models.CharField(max_length=255, verbose_name='Survey')
+    description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Created at')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Updated at')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='surveys',
@@ -27,6 +29,7 @@ class Survey(models.Model):
         verbose_name = 'Survey'
         verbose_name_plural = 'Surveys'
 
+
 class Question(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name='questions',
                                verbose_name='Survey')
@@ -37,6 +40,7 @@ class Question(models.Model):
     class Meta:
         verbose_name = 'Question'
         verbose_name_plural = 'Questions'
+
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='choices',
@@ -50,6 +54,7 @@ class Choice(models.Model):
         verbose_name = 'Choice'
         verbose_name_plural = 'Choices'
 
+
 class Sumbition(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.PROTECT, related_name='sumbitions',
                                verbose_name='Survey')
@@ -61,6 +66,7 @@ class Sumbition(models.Model):
     class Meta:
         verbose_name = 'Sumbition'
         verbose_name_plural = 'Sumbitions'
+
 
 class Review(models.Model):
     email = models.EmailField()
@@ -77,3 +83,48 @@ class Review(models.Model):
     class Meta:
         verbose_name = "Review"
         verbose_name_plural = "Reviews"
+
+
+class RatingStar(models.Model):
+    value = models.SmallIntegerField(primary_key=True, unique=True, default=0)
+
+    def __str__(self):
+        return f'{self.value}'
+
+    class Meta:
+        verbose_name = "Rating star"
+        verbose_name_plural = "Rating stars"
+
+
+class Rating(models.Model):
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name='ratings')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ratings')
+    star = models.ForeignKey(RatingStar, on_delete=models.CASCADE, related_name='ratings')
+
+    def __str__(self):
+        return f'{self.survey} - {self.star}'
+
+    class Meta:
+        verbose_name = 'Rating'
+        verbose_name_plural = 'Ratings'
+
+
+class Like(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name='likes')
+
+    def __str__(self):
+        return f'{self.author} - {self.survey}'
+
+class InfoUser(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='info_user')
+    name = models.CharField(max_length=50)
+    surname = models.CharField(max_length=50)
+    image = models.ImageField(upload_to='media/user_image', blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.name}-{self.surname}'
+
+    class Meta:
+        verbose_name = 'Info_student'
+        verbose_name_plural = 'Info_studets'
