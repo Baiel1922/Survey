@@ -13,6 +13,7 @@ class Category(models.Model):
 
 class Survey(models.Model):
     title = models.CharField(max_length=255, verbose_name='Survey')
+    description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Created at')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Updated at')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='surveys',
@@ -77,3 +78,25 @@ class Review(models.Model):
     class Meta:
         verbose_name = "Review"
         verbose_name_plural = "Reviews"
+
+class RatingStar(models.Model):
+    value = models.SmallIntegerField(primary_key=True, unique=True, default=0)
+
+    def __str__(self):
+        return f'{self.value}'
+
+    class Meta:
+        verbose_name = "Rating star"
+        verbose_name_plural = "Rating stars"
+
+class Rating(models.Model):
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name='ratings')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ratings')
+    star = models.ForeignKey(RatingStar, on_delete=models.CASCADE, related_name='ratings')
+
+    def __str__(self):
+        return f'{self.survey} - {self.star}'
+
+    class Meta:
+        verbose_name = 'Rating'
+        verbose_name_plural = 'Ratings'
