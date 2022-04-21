@@ -74,6 +74,25 @@ class CreateRatingSerializer(serializers.ModelSerializer):
         )
         return rating
 
+
+class LikeSerializer(serializers.ModelSerializer):
+    author = ReadOnlyField(source='author.email')
+
+    class Meta:
+        model = Like
+        fields = '__all__'
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        user = request.user
+        survey = validated_data.get('survey')
+
+        if Like.objects.filter(author=user, survey=survey):
+            return Like.objects.get(author=user, survey=survey)
+        else:
+            return Like.objects.create(author=user, survey=survey)
+
+
 class SurveySerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(format='%d/%m/%y %H:%M:%S', read_only=True)
     author = ReadOnlyField(source='author.email')
@@ -99,5 +118,8 @@ class SurveySerializer(serializers.ModelSerializer):
                                                      context=self.context).data
         representation["ratings"] = CreateRatingSerializer(instance.ratings.all(), many=True,
                                                      context=self.context).data
+        representation["likes"] = Like.objects.filter(survey=instance).count()
         return representation
+
+
 

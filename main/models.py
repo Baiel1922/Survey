@@ -11,6 +11,7 @@ class Category(models.Model):
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
 
+
 class Survey(models.Model):
     title = models.CharField(max_length=255, verbose_name='Survey')
     description = models.TextField(blank=True, null=True)
@@ -28,6 +29,7 @@ class Survey(models.Model):
         verbose_name = 'Survey'
         verbose_name_plural = 'Surveys'
 
+
 class Question(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name='questions',
                                verbose_name='Survey')
@@ -38,6 +40,7 @@ class Question(models.Model):
     class Meta:
         verbose_name = 'Question'
         verbose_name_plural = 'Questions'
+
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='choices',
@@ -51,6 +54,7 @@ class Choice(models.Model):
         verbose_name = 'Choice'
         verbose_name_plural = 'Choices'
 
+
 class Sumbition(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.PROTECT, related_name='sumbitions',
                                verbose_name='Survey')
@@ -62,6 +66,7 @@ class Sumbition(models.Model):
     class Meta:
         verbose_name = 'Sumbition'
         verbose_name_plural = 'Sumbitions'
+
 
 class Review(models.Model):
     email = models.EmailField()
@@ -79,6 +84,7 @@ class Review(models.Model):
         verbose_name = "Review"
         verbose_name_plural = "Reviews"
 
+
 class RatingStar(models.Model):
     value = models.SmallIntegerField(primary_key=True, unique=True, default=0)
 
@@ -88,6 +94,7 @@ class RatingStar(models.Model):
     class Meta:
         verbose_name = "Rating star"
         verbose_name_plural = "Rating stars"
+
 
 class Rating(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name='ratings')
@@ -100,3 +107,12 @@ class Rating(models.Model):
     class Meta:
         verbose_name = 'Rating'
         verbose_name_plural = 'Ratings'
+
+
+class Like(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name='likes')
+
+    def __str__(self):
+        return f'{self.author} - {self.survey}'
+
