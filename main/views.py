@@ -1,16 +1,15 @@
 from django.shortcuts import render
-from django.shortcuts import render
-from rest_framework import viewsets, generics
-from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from .service import LargeResultsSetPagination
 from rest_framework.decorators import action
+from rest_framework import viewsets, generics, filters
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+from django_filters.rest_framework import DjangoFilterBackend
+from .service import LargeResultsSetPagination
 from account.permissions import IsActivePermission
 from .permissions import IsAuthorPermission
 from .serializers import *
 from .models import *
-# Create your views here.
+
 class PermissionMixin:
     def get_permissions(self):
         if self.action == "create":
@@ -26,11 +25,15 @@ class CategoryListView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
-class SurveyViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+class SurveyViewSet(PermissionMixin, viewsets.ModelViewSet):
+    # permission_classes = [IsAuthenticated]
     queryset = Survey.objects.all()
     serializer_class = SurveySerializer
     pagination_class = LargeResultsSetPagination
+    filter_backends = [filters.SearchFilter, DjangoFilterBackend, filters.OrderingFilter]
+    search_fields = ['title', 'author__email']
+    filterset_fields = ['category']
+    ordering_fields = '__all__'
 
 class QuestionViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -52,21 +55,21 @@ class ReviewCreateView(generics.ListCreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewCreateSerializer
 
-class AddRatingViewSet(viewsets.ModelViewSet, PermissionMixin):
+class AddRatingViewSet(PermissionMixin,viewsets.ModelViewSet):
     queryset = Rating.objects.all()
     serializer_class = CreateRatingSerializer
 
-class InfoUserViewSet(viewsets.ModelViewSet, PermissionMixin):
+class InfoUserViewSet(PermissionMixin, viewsets.ModelViewSet):
     queryset = InfoUser.objects.all()
     serializer_class = InfoUserSerializer
 
-class LikeView(PermissionMixin ,viewsets.ModelViewSet):
+class LikeView(PermissionMixin, viewsets.ModelViewSet):
     queryset = Like.objects.all()
     serializer_class = LikeSerializer
 
-    @action(detail=False, methods=['get'])
-    def favorite(self, request, pk=None):
-        queryset = self.get_queryset()
-        queryset = queryset.filter(author=request.user)
-        serializer = LikeSerializer(queryset, many=True, context={'request': request})
-        return Response(serializer.data, status=200)
+    # @action(detail=False, methods=["GET", ])
+    # def favorite(self, request, pk=None):
+    #     queryset = self.get_queryset()
+    #     queryset = queryset.filter(author=request.user)
+    #     serializer = LikeSerializer(queryset, many=True, context={'request': request})
+    #     return Response(serializer.data, status=200)

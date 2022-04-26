@@ -99,14 +99,16 @@ class SurveySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Survey
-        fields = ['id', 'title', 'created_at', 'updated_at', 'category', 'image', 'author', 'description']
+        fields = ['id', 'title', 'created_at', 'updated_at', 'category', 'image', 'author', 'description', ]
 
     def create(self, validated_data):
         request = self.context.get('request')
         survey = Survey.objects.create(
             author=request.user,
             title=validated_data.get('title'),
-            category=validated_data.get('category')
+            category=validated_data.get('category'),
+            description=validated_data.get('description'),
+            image=validated_data.get('image')
         )
         return survey
 
@@ -127,7 +129,7 @@ class InfoUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = InfoUser
-        fields = '__all__'
+        fields = ['id', 'author', 'name', 'surname', 'image']
 
     def create(self, validated_data):
         request = self.context.get('request')
