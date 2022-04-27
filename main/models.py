@@ -56,7 +56,7 @@ class Choice(models.Model):
 
 
 class Sumbition(models.Model):
-    survey = models.ForeignKey(Survey, on_delete=models.PROTECT, related_name='sumbitions',
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name='sumbitions',
                                verbose_name='Survey')
     answer = models.ManyToManyField(Choice, verbose_name='Answer')
     participant_email = models.EmailField(verbose_name='Email')
@@ -126,5 +126,5 @@ class InfoUser(models.Model):
         return f'{self.name}-{self.surname}'
 
     class Meta:
-        verbose_name = 'Info_student'
-        verbose_name_plural = 'Info_studets'
+        verbose_name = 'Info user'
+        verbose_name_plural = 'Info users'
