@@ -121,6 +121,8 @@ class SurveySerializer(serializers.ModelSerializer):
         representation["ratings"] = CreateRatingSerializer(instance.ratings.all(), many=True,
                                                      context=self.context).data
         representation["likes"] = Like.objects.filter(survey=instance).count()
+        representation["sumbitions"] = SumbitionSerializer(instance.sumbitions.all(), many=True,
+                                                           context=self.context).data
         return representation
 
 
